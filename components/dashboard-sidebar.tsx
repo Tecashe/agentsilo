@@ -3,13 +3,26 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { ShoppingBag, Settings, HelpCircle, LogOut, LayoutDashboard, Bot, Zap, History } from "lucide-react"
+import { ShoppingBag, Settings, HelpCircle, LogOut, LayoutDashboard, Bot, Zap, History, Menu, X } from "lucide-react"
 import { useAuth } from "@/components/auth-provider"
+import { useState, useEffect } from "react"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { useMobile } from "@/hooks/use-mobile"
 
 export function DashboardSidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const { signOut } = useAuth()
+  const isMobile = useMobile()
+  const [isOpen, setIsOpen] = useState(false)
+
+  // Close sidebar when navigating on mobile
+  useEffect(() => {
+    if (isMobile) {
+      setIsOpen(false)
+    }
+  }, [pathname, isMobile])
 
   const isActive = (path: string) => {
     return pathname === path
@@ -59,12 +72,17 @@ export function DashboardSidebar() {
     router.refresh()
   }
 
-  return (
-    <div className="w-64 bg-white border-r h-screen sticky top-0 overflow-y-auto">
-      <div className="p-6">
+  const SidebarContent = () => (
+    <>
+      <div className="p-6 flex items-center justify-between">
         <Link href="/" className="flex items-center">
-          <span className="text-xl font-bold text-purple-600">AI Agents</span>
+          <span className="text-xl font-bold text-primary">AI Agents</span>
         </Link>
+        {isMobile && (
+          <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
+            <X className="h-5 w-5" />
+          </Button>
+        )}
       </div>
       <div className="px-3 py-2">
         <nav className="space-y-1">
@@ -73,7 +91,9 @@ export function DashboardSidebar() {
               key={item.href}
               href={item.href}
               className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
-                isActive(item.href) ? "bg-purple-50 text-purple-700" : "text-gray-700 hover:bg-gray-100"
+                isActive(item.href)
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
               }`}
             >
               {item.icon}
@@ -82,16 +102,49 @@ export function DashboardSidebar() {
           ))}
         </nav>
       </div>
-      <div className="px-6 py-4 mt-auto border-t">
+      <div className="px-6 py-4 mt-auto border-t dark:border-gray-800 flex items-center justify-between">
         <Button
           variant="outline"
-          className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+          className="justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
           onClick={handleSignOut}
         >
           <LogOut className="h-5 w-5 mr-2" />
           Log out
         </Button>
+        <ThemeToggle />
       </div>
+    </>
+  )
+
+  if (isMobile) {
+    return (
+      <>
+        <div className="h-16 border-b dark:border-gray-800 flex items-center justify-between px-4">
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-6 w-6" />
+                <span className="sr-only">Open sidebar</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[280px] p-0">
+              <div className="flex flex-col h-full">
+                <SidebarContent />
+              </div>
+            </SheetContent>
+          </Sheet>
+          <Link href="/" className="flex items-center">
+            <span className="text-xl font-bold text-primary">AI Agents</span>
+          </Link>
+          <ThemeToggle />
+        </div>
+      </>
+    )
+  }
+
+  return (
+    <div className="w-64 border-r dark:border-gray-800 h-screen sticky top-0 overflow-y-auto flex flex-col">
+      <SidebarContent />
     </div>
   )
 }

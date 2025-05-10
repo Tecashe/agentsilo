@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Bot, Clock, Activity, Zap, History } from "lucide-react"
+import { ArrowLeft, Bot, Clock, Activity, Zap, History, Play } from "lucide-react"
 import { getUserAgentById } from "@/lib/actions/agents"
 import { notFound } from "next/navigation"
 import { ToggleAgentStatus } from "@/components/toggle-agent-status"
@@ -28,15 +28,20 @@ export default async function AgentDetailPage({ params }: { params: { id: string
   return (
     <div className="space-y-8">
       <div>
-        <Link href="/dashboard/my-agents" className="text-purple-600 hover:underline mb-4 inline-block">
+        <Link href="/dashboard/my-agents" className="text-primary hover:underline mb-4 inline-block">
           <ArrowLeft className="h-4 w-4 inline mr-1" /> Back to My Agents
         </Link>
         <div className="flex flex-col md:flex-row justify-between items-start">
           <div>
             <h1 className="text-3xl font-bold">{userAgent.name}</h1>
-            <p className="text-gray-600">{userAgent.description}</p>
+            <p className="text-muted-foreground">{userAgent.description}</p>
           </div>
           <div className="flex items-center mt-4 md:mt-0 space-x-2">
+            <Button asChild variant="outline">
+              <Link href={`/dashboard/my-agents/${userAgent.id}/test`}>
+                <Play className="mr-2 h-4 w-4" /> Test Agent
+              </Link>
+            </Button>
             <ToggleAgentStatus agent={userAgent} />
           </div>
         </div>
@@ -45,7 +50,7 @@ export default async function AgentDetailPage({ params }: { params: { id: string
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Status</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Status</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -58,33 +63,33 @@ export default async function AgentDetailPage({ params }: { params: { id: string
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Created</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Created</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <Clock className="h-5 w-5 text-purple-500 mr-2" />
+              <Clock className="h-5 w-5 text-primary mr-2" />
               <div>{formatDate(userAgent.created_at)}</div>
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Last Updated</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Last Updated</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <Activity className="h-5 w-5 text-purple-500 mr-2" />
+              <Activity className="h-5 w-5 text-primary mr-2" />
               <div>{formatDate(userAgent.updated_at)}</div>
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Category</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Category</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <Bot className="h-5 w-5 text-purple-500 mr-2" />
+              <Bot className="h-5 w-5 text-primary mr-2" />
               <div>{userAgent.agent.category}</div>
             </div>
           </CardContent>
@@ -108,13 +113,13 @@ export default async function AgentDetailPage({ params }: { params: { id: string
               <div className="space-y-4">
                 <div>
                   <h3 className="font-medium mb-2">Description</h3>
-                  <p className="text-gray-600">{userAgent.agent.description}</p>
+                  <p className="text-muted-foreground">{userAgent.agent.description}</p>
                 </div>
                 <div>
                   <h3 className="font-medium mb-2">Features</h3>
                   <ul className="list-disc pl-5 space-y-1">
                     {userAgent.agent.features.map((feature, index) => (
-                      <li key={index} className="text-gray-600">
+                      <li key={index} className="text-muted-foreground">
                         {feature}
                       </li>
                     ))}
@@ -132,9 +137,9 @@ export default async function AgentDetailPage({ params }: { params: { id: string
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {userAgent.agent.integrations.map((integration, index) => (
-                  <div key={index} className="flex items-center p-3 border rounded-lg">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-                      <Zap className="h-4 w-4 text-purple-600" />
+                  <div key={index} className="flex items-center p-3 border rounded-lg dark:border-gray-800">
+                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+                      <Zap className="h-4 w-4 text-primary" />
                     </div>
                     <span>{integration}</span>
                   </div>
@@ -151,7 +156,7 @@ export default async function AgentDetailPage({ params }: { params: { id: string
               <CardDescription>Configure how this agent operates</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">Settings would be displayed here based on the agent type.</p>
+              <p className="text-muted-foreground">Settings would be displayed here based on the agent type.</p>
               <div className="mt-4">
                 <Button asChild>
                   <Link href={`/dashboard/my-agents/${userAgent.id}/settings`}>Edit Settings</Link>
@@ -170,15 +175,15 @@ export default async function AgentDetailPage({ params }: { params: { id: string
             <CardContent>
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-start space-x-4 p-4 border rounded-lg">
-                    <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                      <History className="h-5 w-5 text-purple-600" />
+                  <div key={i} className="flex items-start space-x-4 p-4 border rounded-lg dark:border-gray-800">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <History className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                       <p className="font-medium">
                         {i === 1 ? "Agent was deployed" : i === 2 ? "Settings were updated" : "Agent was activated"}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         {i === 1
                           ? formatDate(userAgent.created_at)
                           : i === 2

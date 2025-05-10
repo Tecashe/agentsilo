@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, X } from "lucide-react"
 import { useAuth } from "@/components/auth-provider"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export function Navbar() {
   const pathname = usePathname()
@@ -33,12 +34,12 @@ export function Navbar() {
   }
 
   return (
-    <nav className="border-b bg-white">
+    <nav className="border-b dark:border-gray-800">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <span className="text-2xl font-bold text-purple-600">AI Agents</span>
+              <span className="text-2xl font-bold text-primary">AI Agents</span>
             </Link>
           </div>
 
@@ -49,7 +50,7 @@ export function Navbar() {
                 key={link.path}
                 href={link.path}
                 className={`text-sm font-medium transition-colors ${
-                  isActive(link.path) ? "text-purple-600" : "text-gray-600 hover:text-purple-600"
+                  isActive(link.path) ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {link.name}
@@ -58,6 +59,7 @@ export function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
             {user ? (
               <>
                 <Button asChild variant="outline">
@@ -80,7 +82,8 @@ export function Navbar() {
           </div>
 
           {/* Mobile Navigation */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <ThemeToggle />
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon">
@@ -92,7 +95,7 @@ export function Navbar() {
                 <div className="flex flex-col h-full">
                   <div className="flex items-center justify-between py-4">
                     <Link href="/" className="flex items-center" onClick={() => setIsOpen(false)}>
-                      <span className="text-2xl font-bold text-purple-600">AI Agents</span>
+                      <span className="text-2xl font-bold text-primary">AI Agents</span>
                     </Link>
                     <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
                       <X className="h-6 w-6" />
@@ -105,7 +108,7 @@ export function Navbar() {
                         key={link.path}
                         href={link.path}
                         className={`text-lg font-medium transition-colors ${
-                          isActive(link.path) ? "text-purple-600" : "text-gray-600 hover:text-purple-600"
+                          isActive(link.path) ? "text-primary" : "text-muted-foreground hover:text-foreground"
                         }`}
                         onClick={() => setIsOpen(false)}
                       >
