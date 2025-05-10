@@ -188,6 +188,7 @@ export interface Database {
           avatar_url: string
           subscription_tier: string
           notification_settings: Json
+          role: string
           created_at: string
           updated_at: string
         }
@@ -200,6 +201,7 @@ export interface Database {
           avatar_url?: string
           subscription_tier?: string
           notification_settings?: Json
+          role?: string
           created_at?: string
           updated_at?: string
         }
@@ -212,8 +214,230 @@ export interface Database {
           avatar_url?: string
           subscription_tier?: string
           notification_settings?: Json
+          role?: string
           created_at?: string
           updated_at?: string
+        }
+      }
+      workflows: {
+        Row: {
+          id: string
+          name: string
+          description: string
+          n8n_workflow_id: string
+          category: string
+          version: string
+          pricing_tier: string
+          price: number
+          setup_time: string
+          is_published: boolean
+          is_featured: boolean
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description: string
+          n8n_workflow_id: string
+          category: string
+          version?: string
+          pricing_tier?: string
+          price?: number
+          setup_time?: string
+          is_published?: boolean
+          is_featured?: boolean
+          created_by: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string
+          n8n_workflow_id?: string
+          category?: string
+          version?: string
+          pricing_tier?: string
+          price?: number
+          setup_time?: string
+          is_published?: boolean
+          is_featured?: boolean
+          created_by?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      workflow_integrations: {
+        Row: {
+          id: string
+          workflow_id: string
+          integration_name: string
+          integration_type: string
+          is_required: boolean
+          config_schema: Json
+          description: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          workflow_id: string
+          integration_name: string
+          integration_type: string
+          is_required?: boolean
+          config_schema?: Json
+          description?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          workflow_id?: string
+          integration_name?: string
+          integration_type?: string
+          is_required?: boolean
+          config_schema?: Json
+          description?: string | null
+          created_at?: string
+        }
+      }
+      workflow_features: {
+        Row: {
+          id: string
+          workflow_id: string
+          feature: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          workflow_id: string
+          feature: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          workflow_id?: string
+          feature?: string
+          created_at?: string
+        }
+      }
+      workflow_usage: {
+        Row: {
+          id: string
+          workflow_id: string
+          user_id: string
+          execution_count: number
+          last_executed_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          workflow_id: string
+          user_id: string
+          execution_count?: number
+          last_executed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          workflow_id?: string
+          user_id?: string
+          execution_count?: number
+          last_executed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      workflow_ratings: {
+        Row: {
+          id: string
+          workflow_id: string
+          user_id: string
+          rating: number
+          review: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          workflow_id: string
+          user_id: string
+          rating: number
+          review?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          workflow_id?: string
+          user_id?: string
+          rating?: number
+          review?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      user_workflows: {
+        Row: {
+          id: string
+          user_id: string
+          workflow_id: string
+          status: string
+          integration_config: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          workflow_id: string
+          status?: string
+          integration_config?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          workflow_id?: string
+          status?: string
+          integration_config?: Json
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      workflow_execution_logs: {
+        Row: {
+          id: string
+          user_workflow_id: string
+          status: string
+          input_data: Json | null
+          output_data: Json | null
+          error_message: string | null
+          execution_time: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_workflow_id: string
+          status: string
+          input_data?: Json | null
+          output_data?: Json | null
+          error_message?: string | null
+          execution_time?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_workflow_id?: string
+          status?: string
+          input_data?: Json | null
+          output_data?: Json | null
+          error_message?: string | null
+          execution_time?: number | null
+          created_at?: string
         }
       }
     }
