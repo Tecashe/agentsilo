@@ -871,7 +871,7 @@ interface Workflow {
   name: string;
   description: string;
   category: string;
-  setup_time: string;
+  setup_time?: string;
   integrations: string[];
   usage_count?: number;
   features: string[];
