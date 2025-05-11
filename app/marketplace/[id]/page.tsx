@@ -405,6 +405,453 @@
 //   )
 // }
 
+// import Link from "next/link"
+// import { notFound } from "next/navigation"
+// import { Button } from "@/components/ui/button"
+// import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+// import { Badge } from "@/components/ui/badge"
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+// import { WorkflowRating } from "@/components/workflow-rating"
+// import { getWorkflowById, getUserWorkflows } from "@/lib/actions/workflows"
+// import { getUserDetails } from "@/lib/auth"
+// import { Clock, Zap, Users, ArrowRight, Check } from "lucide-react"
+
+// // Define interfaces for your data structure
+// interface Workflow {
+//   id: string;
+//   name: string;
+//   description: string;
+//   category: string;
+//   setup_time: string;
+//   integrations: string[];
+//   features: string[];
+//   usage_count?: number;
+//   setup_instructions?: string;
+//   pricing: string;
+//   rating?: number;
+// }
+
+// interface UserWorkflow {
+//   workflow_id: string;
+//   // Add other properties as needed
+// }
+
+// export default async function WorkflowDetailPage({ params }: { params: { id: string } }) {
+//   const workflow = await getWorkflowById(params.id) as Workflow;
+
+//   if (!workflow) {
+//     notFound()
+//   }
+
+//   // Get user details to check if they've already deployed this workflow
+//   const user = await getUserDetails()
+//   let userWorkflows: UserWorkflow[] = []
+
+//   if (user) {
+//     userWorkflows = await getUserWorkflows() as UserWorkflow[];
+//   }
+
+//   const hasDeployed = userWorkflows.some((uw) => uw.workflow_id === workflow.id)
+
+//   return (
+//     <div className="container mx-auto px-4 py-12">
+//       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+//         <div className="lg:col-span-2 space-y-8">
+//           <div>
+//             <div className="flex items-center gap-2 mb-2">
+//               <Link href="/marketplace" className="text-sm text-muted-foreground hover:underline">
+//                 Marketplace
+//               </Link>
+//               <span className="text-sm text-muted-foreground">/</span>
+//               <span className="text-sm">{workflow.name}</span>
+//             </div>
+//             <h1 className="text-3xl font-bold mb-4">{workflow.name}</h1>
+//             <p className="text-lg text-muted-foreground mb-6">{workflow.description}</p>
+
+//             <div className="flex flex-wrap gap-4 mb-8">
+//               <div className="flex items-center">
+//                 <Badge variant="outline" className="capitalize">
+//                   {workflow.category}
+//                 </Badge>
+//               </div>
+//               <div className="flex items-center">
+//                 <Clock className="h-4 w-4 text-muted-foreground mr-2" />
+//                 <span className="text-sm text-muted-foreground">{workflow.setup_time} setup</span>
+//               </div>
+//               <div className="flex items-center">
+//                 <Zap className="h-4 w-4 text-muted-foreground mr-2" />
+//                 <span className="text-sm text-muted-foreground">
+//                   {workflow.integrations.length} Integration{workflow.integrations.length !== 1 ? "s" : ""}
+//                 </span>
+//               </div>
+//               <div className="flex items-center">
+//                 <Users className="h-4 w-4 text-muted-foreground mr-2" />
+//                 <span className="text-sm text-muted-foreground">{workflow.usage_count || 0} users</span>
+//               </div>
+//             </div>
+//           </div>
+
+//           <Tabs defaultValue="overview">
+//             <TabsList>
+//               <TabsTrigger value="overview">Overview</TabsTrigger>
+//               <TabsTrigger value="setup">Setup Instructions</TabsTrigger>
+//               <TabsTrigger value="integrations">Integrations</TabsTrigger>
+//             </TabsList>
+//             <TabsContent value="overview" className="space-y-6">
+//               <div>
+//                 <h2 className="text-xl font-semibold mb-4">Features</h2>
+//                 <ul className="space-y-2">
+//                   {workflow.features.map((feature: string, index: number) => (
+//                     <li key={index} className="flex items-start">
+//                       <Check className="h-5 w-5 text-primary mr-2 mt-0.5" />
+//                       <span>{feature}</span>
+//                     </li>
+//                   ))}
+//                 </ul>
+//               </div>
+
+//               <div>
+//                 <h2 className="text-xl font-semibold mb-4">Use Cases</h2>
+//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//                   <Card>
+//                     <CardHeader>
+//                       <CardTitle className="text-lg">Business</CardTitle>
+//                     </CardHeader>
+//                     <CardContent>
+//                       <p>Streamline your business processes and automate repetitive tasks.</p>
+//                     </CardContent>
+//                   </Card>
+//                   <Card>
+//                     <CardHeader>
+//                       <CardTitle className="text-lg">Personal</CardTitle>
+//                     </CardHeader>
+//                     <CardContent>
+//                       <p>Simplify your daily routines and save time on manual work.</p>
+//                     </CardContent>
+//                   </Card>
+//                 </div>
+//               </div>
+//             </TabsContent>
+
+//             <TabsContent value="setup" className="space-y-6">
+//               <div>
+//                 <h2 className="text-xl font-semibold mb-4">Setup Instructions</h2>
+//                 <div className="prose max-w-none">
+//                   {workflow.setup_instructions ? (
+//                     <div className="whitespace-pre-wrap">{workflow.setup_instructions}</div>
+//                   ) : (
+//                     <p>No setup instructions provided. This workflow is ready to use out of the box.</p>
+//                   )}
+//                 </div>
+//               </div>
+//             </TabsContent>
+
+//             <TabsContent value="integrations" className="space-y-6">
+//               <div>
+//                 <h2 className="text-xl font-semibold mb-4">Required Integrations</h2>
+//                 {workflow.integrations.length > 0 ? (
+//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//                     {workflow.integrations.map((integration: string, index: number) => (
+//                       <Card key={index}>
+//                         <CardHeader>
+//                           <CardTitle className="text-lg">{integration}</CardTitle>
+//                         </CardHeader>
+//                         <CardContent>
+//                           <p className="text-muted-foreground">
+//                             You'll need to connect your {integration} account during setup.
+//                           </p>
+//                         </CardContent>
+//                       </Card>
+//                     ))}
+//                   </div>
+//                 ) : (
+//                   <p>This workflow doesn't require any external integrations.</p>
+//                 )}
+//               </div>
+//             </TabsContent>
+//           </Tabs>
+//         </div>
+
+//         <div className="space-y-6">
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>Deploy This Agent</CardTitle>
+//               <CardDescription>Add this agent to your dashboard and start using it right away.</CardDescription>
+//             </CardHeader>
+//             <CardContent>
+//               <div className="space-y-4">
+//                 <div className="flex justify-between items-center">
+//                   <span className="font-medium">Pricing</span>
+//                   <span>{workflow.pricing}</span>
+//                 </div>
+//                 <div className="flex justify-between items-center">
+//                   <span className="font-medium">Setup Time</span>
+//                   <span>{workflow.setup_time}</span>
+//                 </div>
+//                 <WorkflowRating
+//                   workflowId={workflow.id}
+//                   initialRating={workflow.rating || 0}
+//                   totalRatings={10} // This would come from the database in a real app
+//                 />
+//               </div>
+//             </CardContent>
+//             <CardFooter>
+//               {hasDeployed ? (
+//                 <Button asChild className="w-full">
+//                   <Link href="/dashboard/my-workflows">View in Dashboard</Link>
+//                 </Button>
+//               ) : (
+//                 <Button asChild className="w-full">
+//                   <Link href={`/marketplace/${workflow.id}/deploy`}>
+//                     Deploy Agent <ArrowRight className="ml-2 h-4 w-4" />
+//                   </Link>
+//                 </Button>
+//               )}
+//             </CardFooter>
+//           </Card>
+
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>Need Help?</CardTitle>
+//             </CardHeader>
+//             <CardContent>
+//               <p className="text-muted-foreground mb-4">
+//                 Have questions about this agent or need assistance with setup?
+//               </p>
+//               <Button variant="outline" className="w-full" asChild>
+//                 <Link href="/support">Contact Support</Link>
+//               </Button>
+//             </CardContent>
+//           </Card>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+// import Link from "next/link"
+// import { notFound } from "next/navigation"
+// import { Button } from "@/components/ui/button"
+// import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+// import { Badge } from "@/components/ui/badge"
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+// import { WorkflowRating } from "@/components/workflow-rating"
+// import { WorkflowFlowDiagram } from "@/components/workflow/workflow-diagram"
+// import { WorkflowMediaGallery } from "@/components/workflow/media-gallery"
+// import { getWorkflowById, getUserWorkflows } from "@/lib/actions/workflows"
+// import { getUserDetails } from "@/lib/auth"
+// import { Clock, Zap, Users, ArrowRight, Check } from "lucide-react"
+
+// export default async function WorkflowDetailPage({ params }: { params: { id: string } }) {
+//   const workflow = await getWorkflowById(params.id)
+
+//   if (!workflow) {
+//     notFound()
+//   }
+
+//   // Get user details to check if they've already deployed this workflow
+//   const user = await getUserDetails()
+//   let userWorkflows = []
+
+//   if (user) {
+//     userWorkflows = await getUserWorkflows()
+//   }
+
+//   const hasDeployed = userWorkflows.some((uw) => uw.workflow_id === workflow.id)
+
+//   return (
+//     <div className="container mx-auto px-4 py-12">
+//       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+//         <div className="lg:col-span-2 space-y-8">
+//           <div>
+//             <div className="flex items-center gap-2 mb-2">
+//               <Link href="/marketplace" className="text-sm text-muted-foreground hover:underline">
+//                 Marketplace
+//               </Link>
+//               <span className="text-sm text-muted-foreground">/</span>
+//               <span className="text-sm">{workflow.name}</span>
+//             </div>
+//             <h1 className="text-3xl font-bold mb-4">{workflow.name}</h1>
+//             <p className="text-lg text-muted-foreground mb-6">{workflow.description}</p>
+
+//             <div className="flex flex-wrap gap-4 mb-8">
+//               <div className="flex items-center">
+//                 <Badge variant="outline" className="capitalize">
+//                   {workflow.category}
+//                 </Badge>
+//               </div>
+//               <div className="flex items-center">
+//                 <Clock className="h-4 w-4 text-muted-foreground mr-2" />
+//                 <span className="text-sm text-muted-foreground">{workflow.setup_time} setup</span>
+//               </div>
+//               <div className="flex items-center">
+//                 <Zap className="h-4 w-4 text-muted-foreground mr-2" />
+//                 <span className="text-sm text-muted-foreground">
+//                   {workflow.integrations.length} Integration{workflow.integrations.length !== 1 ? "s" : ""}
+//                 </span>
+//               </div>
+//               <div className="flex items-center">
+//                 <Users className="h-4 w-4 text-muted-foreground mr-2" />
+//                 <span className="text-sm text-muted-foreground">{workflow.usage_count || 0} users</span>
+//               </div>
+//             </div>
+//           </div>
+
+//           <Tabs defaultValue="overview">
+//             <TabsList>
+//               <TabsTrigger value="overview">Overview</TabsTrigger>
+//               <TabsTrigger value="how-it-works">How It Works</TabsTrigger>
+//               <TabsTrigger value="tutorials">Tutorials</TabsTrigger>
+//               <TabsTrigger value="setup">Setup Instructions</TabsTrigger>
+//               <TabsTrigger value="integrations">Integrations</TabsTrigger>
+//             </TabsList>
+
+//             <TabsContent value="overview" className="space-y-6">
+//               <div>
+//                 <h2 className="text-xl font-semibold mb-4">Features</h2>
+//                 <ul className="space-y-2">
+//                   {workflow.features.map((feature, index) => (
+//                     <li key={index} className="flex items-start">
+//                       <Check className="h-5 w-5 text-primary mr-2 mt-0.5" />
+//                       <span>{feature}</span>
+//                     </li>
+//                   ))}
+//                 </ul>
+//               </div>
+
+//               <div>
+//                 <h2 className="text-xl font-semibold mb-4">Use Cases</h2>
+//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//                   <Card>
+//                     <CardHeader>
+//                       <CardTitle className="text-lg">Business</CardTitle>
+//                     </CardHeader>
+//                     <CardContent>
+//                       <p>Streamline your business processes and automate repetitive tasks.</p>
+//                     </CardContent>
+//                   </Card>
+//                   <Card>
+//                     <CardHeader>
+//                       <CardTitle className="text-lg">Personal</CardTitle>
+//                     </CardHeader>
+//                     <CardContent>
+//                       <p>Simplify your daily routines and save time on manual work.</p>
+//                     </CardContent>
+//                   </Card>
+//                 </div>
+//               </div>
+//             </TabsContent>
+
+//             <TabsContent value="how-it-works" className="space-y-6">
+//               <div>
+//                 <h2 className="text-xl font-semibold mb-4">How This Workflow Works</h2>
+//                 <WorkflowFlowDiagram workflowId={workflow.id} />
+//               </div>
+//             </TabsContent>
+
+//             <TabsContent value="tutorials" className="space-y-6">
+//               <div>
+//                 <h2 className="text-xl font-semibold mb-4">Tutorials & Media</h2>
+//                 <WorkflowMediaGallery workflowId={workflow.id} />
+//               </div>
+//             </TabsContent>
+
+//             <TabsContent value="setup" className="space-y-6">
+//               <div>
+//                 <h2 className="text-xl font-semibold mb-4">Setup Instructions</h2>
+//                 <div className="prose max-w-none">
+//                   {workflow.setup_instructions ? (
+//                     <div className="whitespace-pre-wrap">{workflow.setup_instructions}</div>
+//                   ) : (
+//                     <p>No setup instructions provided. This workflow is ready to use out of the box.</p>
+//                   )}
+//                 </div>
+//               </div>
+//             </TabsContent>
+
+//             <TabsContent value="integrations" className="space-y-6">
+//               <div>
+//                 <h2 className="text-xl font-semibold mb-4">Required Integrations</h2>
+//                 {workflow.integrations.length > 0 ? (
+//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//                     {workflow.integrations.map((integration, index) => (
+//                       <Card key={index}>
+//                         <CardHeader>
+//                           <CardTitle className="text-lg">{integration}</CardTitle>
+//                         </CardHeader>
+//                         <CardContent>
+//                           <p className="text-muted-foreground">
+//                             You'll need to connect your {integration} account during setup.
+//                           </p>
+//                         </CardContent>
+//                       </Card>
+//                     ))}
+//                   </div>
+//                 ) : (
+//                   <p>This workflow doesn't require any external integrations.</p>
+//                 )}
+//               </div>
+//             </TabsContent>
+//           </Tabs>
+//         </div>
+
+//         <div className="space-y-6">
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>Deploy This Agent</CardTitle>
+//               <CardDescription>Add this agent to your dashboard and start using it right away.</CardDescription>
+//             </CardHeader>
+//             <CardContent>
+//               <div className="space-y-4">
+//                 <div className="flex justify-between items-center">
+//                   <span className="font-medium">Pricing</span>
+//                   <span>{workflow.pricing}</span>
+//                 </div>
+//                 <div className="flex justify-between items-center">
+//                   <span className="font-medium">Setup Time</span>
+//                   <span>{workflow.setup_time}</span>
+//                 </div>
+//                 <WorkflowRating
+//                   workflowId={workflow.id}
+//                   initialRating={workflow.rating || 0}
+//                   totalRatings={10} // This would come from the database in a real app
+//                 />
+//               </div>
+//             </CardContent>
+//             <CardFooter>
+//               {hasDeployed ? (
+//                 <Button asChild className="w-full">
+//                   <Link href="/dashboard/my-workflows">View in Dashboard</Link>
+//                 </Button>
+//               ) : (
+//                 <Button asChild className="w-full">
+//                   <Link href={`/marketplace/${workflow.id}/deploy`}>
+//                     Deploy Agent <ArrowRight className="ml-2 h-4 w-4" />
+//                   </Link>
+//                 </Button>
+//               )}
+//             </CardFooter>
+//           </Card>
+
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>Need Help?</CardTitle>
+//             </CardHeader>
+//             <CardContent>
+//               <p className="text-muted-foreground mb-4">
+//                 Have questions about this agent or need assistance with setup?
+//               </p>
+//               <Button variant="outline" className="w-full" asChild>
+//                 <Link href="/support">Contact Support</Link>
+//               </Button>
+//             </CardContent>
+//           </Card>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -412,11 +859,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { WorkflowRating } from "@/components/workflow-rating"
+import { WorkflowFlowDiagram } from "@/components/workflow/workflow-diagram"
+import { WorkflowMediaGallery } from "@/components/workflow/media-gallery"
 import { getWorkflowById, getUserWorkflows } from "@/lib/actions/workflows"
 import { getUserDetails } from "@/lib/auth"
 import { Clock, Zap, Users, ArrowRight, Check } from "lucide-react"
 
-// Define interfaces for your data structure
+// Define types for the workflow and its properties
 interface Workflow {
   id: string;
   name: string;
@@ -424,16 +873,11 @@ interface Workflow {
   category: string;
   setup_time: string;
   integrations: string[];
-  features: string[];
   usage_count?: number;
+  features: string[];
   setup_instructions?: string;
   pricing: string;
   rating?: number;
-}
-
-interface UserWorkflow {
-  workflow_id: string;
-  // Add other properties as needed
 }
 
 export default async function WorkflowDetailPage({ params }: { params: { id: string } }) {
@@ -445,10 +889,10 @@ export default async function WorkflowDetailPage({ params }: { params: { id: str
 
   // Get user details to check if they've already deployed this workflow
   const user = await getUserDetails()
-  let userWorkflows: UserWorkflow[] = []
+  let userWorkflows: any[] = []
 
   if (user) {
-    userWorkflows = await getUserWorkflows() as UserWorkflow[];
+    userWorkflows = await getUserWorkflows()
   }
 
   const hasDeployed = userWorkflows.some((uw) => uw.workflow_id === workflow.id)
@@ -494,9 +938,12 @@ export default async function WorkflowDetailPage({ params }: { params: { id: str
           <Tabs defaultValue="overview">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="how-it-works">How It Works</TabsTrigger>
+              <TabsTrigger value="tutorials">Tutorials</TabsTrigger>
               <TabsTrigger value="setup">Setup Instructions</TabsTrigger>
               <TabsTrigger value="integrations">Integrations</TabsTrigger>
             </TabsList>
+
             <TabsContent value="overview" className="space-y-6">
               <div>
                 <h2 className="text-xl font-semibold mb-4">Features</h2>
@@ -530,6 +977,20 @@ export default async function WorkflowDetailPage({ params }: { params: { id: str
                     </CardContent>
                   </Card>
                 </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="how-it-works" className="space-y-6">
+              <div>
+                <h2 className="text-xl font-semibold mb-4">How This Workflow Works</h2>
+                <WorkflowFlowDiagram workflowId={workflow.id} />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="tutorials" className="space-y-6">
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Tutorials & Media</h2>
+                <WorkflowMediaGallery workflowId={workflow.id} />
               </div>
             </TabsContent>
 
