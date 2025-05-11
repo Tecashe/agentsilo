@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server"
 import { createServerSupabaseClient } from "@/lib/supabase/server"
 
 // List of paths that don't require authentication
-const publicPaths = ["/", "/login", "/signup", "/marketplace", "/request-custom", "/pricing", "/admin"]
+const publicPaths = ["/", "/login", "/signup", "/marketplace", "/request-custom", "/pricing"]
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
 
   // If the user is authenticated and trying to access login/signup, redirect to dashboard
   if ((pathname === "/login" || pathname === "/signup") && session) {
-    return NextResponse.redirect(new URL("/dashboard", request.url))
+    return NextResponse.redirect(new URL("/admin/workflows", request.url))
   }
 
   return NextResponse.next()
