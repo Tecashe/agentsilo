@@ -31,6 +31,11 @@
 //   )
 // }
 
+
+import { Navbar } from "@/components/navbar"
+import { AuthProvider } from "@/components/auth-provider"
+import "./globals.css"
+
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
@@ -55,11 +60,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <div className="absolute top-4 right-4 z-50">
-            <LanguageSwitcher />
-          </div>
+          <Navbar />
+          <AuthProvider>
           {children}
           <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
