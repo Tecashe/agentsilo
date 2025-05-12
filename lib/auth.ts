@@ -113,7 +113,7 @@ export async function requireAdmin() {
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", session.user.id).single()
 
   if (!profile || profile.role !== "admin") {
-    redirect("/dashboard")
+    redirect("/admin")
   }
 
   return session
