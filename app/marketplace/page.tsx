@@ -579,7 +579,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 export default function MarketplacePage() {
   const searchParams = useSearchParams()
   const router = useRouter()
-
+  
   // Parse search params for initial filters
   const initialCategory = searchParams.get("category")
   const initialSearchTerm = searchParams.get("search")
