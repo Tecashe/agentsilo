@@ -1,10 +1,17 @@
 import type React from "react"
-import { AdminSidebarLayout } from "@/components/admin/sidebar"
-import { requireAdmin } from "@/lib/auth"
+import { redirect } from "next/navigation"
+import { getUserDetails } from "@/lib/auth"
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  // Verify user is an admin on the server side
-//   await requireAdmin()
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const user = await getUserDetails()
 
-  return <AdminSidebarLayout>{children}</AdminSidebarLayout>
+  if (!user || user.profile?.role !== "admin") {
+    redirect("/dashboard")
+  }
+
+  return children
 }
